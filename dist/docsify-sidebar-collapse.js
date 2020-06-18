@@ -36,6 +36,26 @@
 
   $docsify.plugins = [function (hook, vm) {
     hook.doneEach(function (html, next) {
+      var links = Docsify.dom.findAll('.sidebar-nav li>a[href="#/"]');
+      links.forEach(function (el) {
+        Docsify.dom.on(el, 'click', function (event) {
+          event.preventDefault();
+          links.forEach(function (a) {
+            if (a === el) {
+              Docsify.dom.toggleClass(a.parentNode, 'add', 'open');
+              var targetEl = a.parentNode;
+
+              while (targetEl.className !== 'sidebar-nav') {
+                if (targetEl.parentNode.tagName === 'LI' || targetEl.parentNode.className === 'app-sub-sidebar') {
+                  Docsify.dom.toggleClass(targetEl.parentNode, 'add', 'open');
+                }
+
+                targetEl = targetEl.parentNode;
+              }
+            }
+          });
+        });
+      });
       var el = document.querySelector('.sidebar-nav .active');
 
       if (el) {
@@ -95,11 +115,17 @@
 
         if (elp.tagName === 'LI') {
           if (elp.classList.contains('open')) {
-            requestAnimationFrame(function () {
-              elp.classList.add('collapse');
-              elp.classList.remove('open');
-              elp.classList.add('hold');
-            });
+            if (e.target.getAttribute('href') === '#/') {
+              requestAnimationFrame(function () {
+                elp.classList.remove('open');
+              });
+            } else {
+              requestAnimationFrame(function () {
+                elp.classList.add('collapse');
+                elp.classList.remove('open');
+                elp.classList.add('hold');
+              });
+            }
           } else {
             requestAnimationFrame(function () {
               if (elp.classList.contains('hold')) {
