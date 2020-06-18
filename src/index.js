@@ -1,8 +1,27 @@
 import './style.css'
 
 $docsify.plugins = [
-  function(hook, vm) {
-    hook.doneEach(function(html, next) {
+  function (hook, vm) {
+    hook.doneEach(function (html, next) {
+      var links = Docsify.dom.findAll('.sidebar-nav li>a[href="#/"]')
+      links.forEach((el) => {
+        Docsify.dom.on(el, 'click', (event) => {
+          event.preventDefault()
+          links.forEach((a) => {
+            if (a === el) {
+              Docsify.dom.toggleClass(a.parentNode, 'add', 'open')
+              let targetEl = a.parentNode
+              while (targetEl.className !== 'sidebar-nav') {
+                if (targetEl.parentNode.tagName === 'LI' || targetEl.parentNode.className === 'app-sub-sidebar') {
+                  Docsify.dom.toggleClass(targetEl.parentNode, 'add', 'open')
+                }
+                targetEl = targetEl.parentNode;
+              }
+            }
+          })
+        })
+      })
+
       let el = document.querySelector('.sidebar-nav .active')
       if (el) {
         el.classList.add('open')
@@ -70,11 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const elp = e.target.parentElement
         if (elp.tagName === 'LI') {
           if (elp.classList.contains('open')) {
-            requestAnimationFrame(() => {
-              elp.classList.add('collapse')
-              elp.classList.remove('open')
-              elp.classList.add('hold')
-            })
+            if (e.target.getAttribute('href') === '#/') {
+              requestAnimationFrame(function () {
+                elp.classList.remove('open');
+              })
+            } else {
+              requestAnimationFrame(function () {
+                elp.classList.add('collapse');
+                elp.classList.remove('open');
+                elp.classList.add('hold');
+              });
+            }
           } else {
             requestAnimationFrame(() => {
               if (elp.classList.contains('hold')) {
