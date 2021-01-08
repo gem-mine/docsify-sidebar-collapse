@@ -31,7 +31,7 @@
     }
   }
 
-  var css = ".sidebar-nav > ul > li ul {\n  display: none;\n}\n\n.app-sub-sidebar {\n  display: none;\n}\n\n.app-sub-sidebar.open {\n  display: block;\n}\n\n.sidebar-nav .open > ul:not(.app-sub-sidebar),\n.sidebar-nav .active:not(.hold) > ul {\n  display: block;\n}\n\n.active + ul.app-sub-sidebar {\n  display: block;\n}\n";
+  var css = ".sidebar-nav>ul>li ul {\n  display: none;\n}\n\n.app-sub-sidebar {\n  display: none;\n}\n\n.app-sub-sidebar.open {\n  display: block;\n}\n\n.sidebar-nav .open ul:not(.app-sub-sidebar),\n.sidebar-nav .active:not(.hold) ul {\n  display: block;\n}\n\n.active+ul.app-sub-sidebar {\n  display: block;\n}";
   styleInject(css);
 
   $docsify.plugins = [function (hook, vm) {
