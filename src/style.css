@@ -1,4 +1,4 @@
-.sidebar-nav > ul > li ul {
+.sidebar-nav>ul>li ul {
   display: none;
 }
 
@@ -10,11 +10,11 @@
   display: block;
 }
 
-.sidebar-nav .open > ul:not(.app-sub-sidebar),
-.sidebar-nav .active:not(.hold) > ul {
+.sidebar-nav .open ul:not(.app-sub-sidebar),
+.sidebar-nav .active:not(.hold) ul {
   display: block;
 }
 
-.active + ul.app-sub-sidebar {
+.active+ul.app-sub-sidebar {
   display: block;
 }
