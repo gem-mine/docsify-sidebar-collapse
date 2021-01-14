@@ -10,8 +10,8 @@
   display: block;
 }
 
-.sidebar-nav .open ul:not(.app-sub-sidebar),
-.sidebar-nav .active:not(.hold) ul {
+.sidebar-nav .open>ul,
+.sidebar-nav .active>ul {
   display: block;
 }
 

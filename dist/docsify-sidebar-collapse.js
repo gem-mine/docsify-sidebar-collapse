@@ -31,31 +31,12 @@
     }
   }
 
-  var css = ".sidebar-nav>ul>li ul {\n  display: none;\n}\n\n.app-sub-sidebar {\n  display: none;\n}\n\n.app-sub-sidebar.open {\n  display: block;\n}\n\n.sidebar-nav .open ul:not(.app-sub-sidebar),\n.sidebar-nav .active:not(.hold) ul {\n  display: block;\n}\n\n.active+ul.app-sub-sidebar {\n  display: block;\n}";
+  var css = ".sidebar-nav>ul>li ul {\n  display: none;\n}\n\n.app-sub-sidebar {\n  display: none;\n}\n\n.app-sub-sidebar.open {\n  display: block;\n}\n\n.sidebar-nav .open>ul,\n.sidebar-nav .active>ul {\n  display: block;\n}\n\n.active+ul.app-sub-sidebar {\n  display: block;\n}";
   styleInject(css);
 
   $docsify.plugins = [function (hook, vm) {
     hook.doneEach(function (html, next) {
-      var links = Docsify.dom.findAll('.sidebar-nav li>a[href="#/"]');
-      links.forEach(function (el) {
-        Docsify.dom.on(el, 'click', function (event) {
-          event.preventDefault();
-          links.forEach(function (a) {
-            if (a === el) {
-              Docsify.dom.toggleClass(a.parentNode, 'add', 'open');
-              var targetEl = a.parentNode;
-
-              while (targetEl.className !== 'sidebar-nav') {
-                if (targetEl.parentNode.tagName === 'LI' || targetEl.parentNode.className === 'app-sub-sidebar') {
-                  Docsify.dom.toggleClass(targetEl.parentNode, 'add', 'open');
-                }
-
-                targetEl = targetEl.parentNode;
-              }
-            }
-          });
-        });
-      });
+      // 寻找active的el，给全部父级li加上open
       var el = document.querySelector('.sidebar-nav .active');
 
       if (el) {
@@ -111,28 +92,26 @@
       }
 
       if (e.target.tagName === 'A') {
+        if (e.target.getAttribute('href') === '#/') {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
         var elp = e.target.parentElement;
 
         if (elp.tagName === 'LI') {
           if (elp.classList.contains('open')) {
-            if (e.target.getAttribute('href') === '#/') {
-              requestAnimationFrame(function () {
-                elp.classList.remove('open');
-              });
-            } else {
-              requestAnimationFrame(function () {
-                elp.classList.add('collapse');
-                elp.classList.remove('open');
-                elp.classList.add('hold');
-              });
-            }
+            requestAnimationFrame(function () {
+              elp.classList.remove('open');
+            });
           } else {
             requestAnimationFrame(function () {
-              if (elp.classList.contains('hold')) {
-                elp.classList.remove('collapse');
-                elp.classList.add('open');
-                elp.classList.remove('hold');
-              }
+              elp.classList.add('open');
+              var elpSubUls = elp.querySelectorAll('a + ul');
+              elpSubUls.forEach(function (elpSubUl) {
+                var elA = elpSubUl.parentElement;
+                elA.classList.add('open');
+              });
             });
           }
         }
